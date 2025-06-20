@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Потрага за благом - проширена</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: linear-gradient(135deg, #e0f0ff, #a0c8ff);
+      min-height: 100vh;
+      margin: 0;
+      color: #003366;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #gameContainer {
+      background: white;
+      padding: 30px 40px;
+      border-radius: 16px;
+      max-width: 600px;
+      width: 90%;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 16px;
+      font-weight: 700;
+    }
+    p {
+      font-size: 18px;
+      margin: 14px 0 20px;
+    }
+    button {
+      padding: 12px 24px;
+      margin: 8px 10px;
+      font-size: 17px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      background: #4389f9;
+      color: white;
+      font-weight: 600;
+      box-shadow: 0 3px 8px rgba(67, 137, 249, 0.6);
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      min-width: 120px;
+    }
+    button:hover:not(:disabled) {
+      background: #2c65d8;
+      transform: scale(1.05);
+    }
+    button:disabled {
+      background: #b3c9ff;
+      cursor: default;
+      transform: none;
+      box-shadow: none;
+    }
+    .feedback {
+      font-size: 19px;
+      font-weight: 700;
+      margin-top: 20px;
+      min-height: 26px;
+      transition: opacity 0.4s ease;
+    }
+    .section {
+      display: none;
+    }
+    .active {
+      display: block;
+    }
+    img {
+      margin-top: 20px;
+      max-width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    input[type="text"] {
+      padding: 10px;
+      width: 80%;
+      font-size: 16px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+  <div id="gameContainer">
+    <audio id="correctSound" src="correct.mp3"></audio>
+    <audio id="wrongSound" src="wrong.mp3"></audio>
+
+    <div id="intro" class="section active">
+      <h2>🎮 Потрага за благом</h2>
+      <p>Добродошли у игру! Спремите се да откријете дигитално благо!</p>
+      <img src="mapablaga.png" alt="" />
+      <button onclick="startGame()">Почни игру</button>
+    </div>
+
+    <div id="crypto" class="section">
+      <h2>🔐 Криптографија</h2>
+      <p>Реши Цезарову шифру: <strong>KHOOR ZRUOG</strong> (помак 3)</p>
+      <input type="text" id="cryptoInput" placeholder="Унеси одговор..." />
+      <br />
+      <button onclick="checkCryptoAnswer()">Провери одговор</button>
+      <div id="cryptoFeedback" class="feedback"></div>
+      <img src="kriptografija.png" alt="Kriptografija" />
+    </div>
+
+    <div id="ai" class="section">
+      <h2>🤖 Вештачка интелигенција</h2>
+      <p>Који појам се највише односи на вештачку интелигенцију?</p>
+      <button data-answer="a">Роботика</button>
+      <button data-answer="b">Класични алгоритми</button>
+      <button data-answer="c">Неуронске мреже</button>
+      <button data-answer="d">Системи управљања</button>
+      <div id="aiFeedback" class="feedback"></div>
+      <img src="AI.png" alt="AI" />
+    </div>
+
+    <div id="ml" class="section">
+      <h2>📊 Машинско учење</h2>
+      <p>Која од следећих опција описује машинско учење?</p>
+      <button data-answer="a">Ручно програмирање свих правила</button>
+      <button data-answer="b">Учење из података</button>
+      <button data-answer="c">Класични алгоритми</button>
+      <button data-answer="d">Системи управљања</button>
+      <div id="mlFeedback" class="feedback"></div>
+      <img src="mu.png" alt="Mašinsko učenje" />
+    </div>
+
+    <div id="matlab1" class="section">
+      <h2>📈 Matlab - Grafikon sinusa</h2>
+      <p>Која команда црта y=sin(x) за x од 0 до 2π?</p>
+      <button data-answer="a">plot(sin(x));</button>
+      <button data-answer="b">fplot(@sin, [0 2*pi]);</button>
+      <button data-answer="c">bar(sin(0:0.1:2*pi));</button>
+      <button data-answer="d">scatter(x, sin(x));</button>
+      <div id="matlab1Feedback" class="feedback"></div>
+      <img src="grafmatlab.png" alt="Graf sinusa" />
+    </div>
+
+    <div id="matlab2" class="section">
+      <h2>📉 Matlab - Vrsta grafikona</h2>
+      <p>Која команда прави stubičasti grafikon za vektor y?</p>
+      <button data-answer="a">scatter(y)</button>
+      <button data-answer="b">hist(y)</button>
+      <button data-answer="c">plot(y)</button>
+      <button data-answer="d">bar(y)</button>
+      <div id="matlab2Feedback" class="feedback"></div>
+      <img src="grafmatlab2.png" alt="Bar grafikon" />
+    </div>
+
+    <div id="iot" class="section">
+      <h2>🌐 Интернет ствари</h2>
+      <p>Шта је приказано на слици испод?</p>
+      <button data-answer="a">Cloud</button>
+      <button data-answer="b">IoT сензор</button>
+      <button data-answer="c">Паметни градови</button>
+      <div id="iotFeedback" class="feedback"></div>
+      <img src="iot.png" alt="IoT senzor" />
+    </div>
+
+    <div id="smartCities" class="section">
+      <h2>🏙️ Паметни градови</h2>
+      <p>Који пример је повезан са паметним градом?</p>
+      <button data-answer="a">Папирна карта</button>
+      <button data-answer="b">Обичан семафор</button>
+      <button data-answer="c">ЛЕД сијалице на сензоре</button>
+      <button data-answer="d">Традиционални паркинг</button>
+      <div id="smartCitiesFeedback" class="feedback"></div>
+      <img src="pg.png" alt="Smart City" />
+    </div>
+
+    <div id="robotics" class="section">
+      <h2>🤖 Роботика</h2>
+      <p>Како се назива роботски уређај који изводи покрете као људска рука?</p>
+      <input type="text" id="roboticsInput" placeholder="Унеси одговор..." />
+      <br />
+      <button onclick="checkRoboticsAnswer()">Провери одговор</button>
+      <div id="roboticsFeedback" class="feedback"></div>
+      <img src="robot.png" alt="Industrijski robot" />
+    </div>
+
+    <div id="finish" class="section">
+      <h2>🎉 Честитке!</h2>
+      <p>Откључао си дигитално благо! Победио си у потрази за знањем.</p>
+      <p id="finalScoreText"></p>
+      <img src="chest.png" alt="Blago" />
+    </div>
+  </div>
+
+  <script>
+    const sequence = [
+      'intro', 'crypto', 'ai', 'ml', 'matlab1', 'matlab2',
+      'iot', 'smartCities', 'robotics', 'finish'
+    ];
+  
+    const answers = {
+      ai: 'c',
+      ml: 'b',
+      matlab1: 'b',
+      matlab2: 'd',
+      iot: 'b',
+      smartCities: 'c'
+    };
+  
+    let score = 0;
+    const firstAttemptTracker = {}; // čuva informacije da li je prvi pokušaj već promašen
+  
+    function playSound(correct) {
+      const sound = document.getElementById(correct ? "correctSound" : "wrongSound");
+      if (sound) sound.play();
+    }
+  
+    function goToNext(currentSection) {
+      const index = sequence.indexOf(currentSection);
+      if (index === -1 || index === sequence.length - 1) return;
+      document.getElementById(currentSection).classList.remove('active');
+      document.getElementById(sequence[index + 1]).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+  
+      if (sequence[index + 1] === 'finish') {
+        document.getElementById("finalScoreText").textContent =
+          `Укупан број поена: ${score} / ${sequence.length - 2}`;
+      }
+    }
+  
+    function disableButtons(section, disable) {
+      document.querySelectorAll(`#${section} button`).forEach(btn => btn.disabled = disable);
+    }
+  
+    function handleAnswer(section, selected) {
+      const feedback = document.getElementById(section + 'Feedback');
+      const correct = answers[section];
+  
+      if (!(section in firstAttemptTracker)) {
+        firstAttemptTracker[section] = true; // prvi pokušaj još traje
+      }
+  
+      if (selected === correct) {
+        if (firstAttemptTracker[section]) {
+          score++;
+        }
+        playSound(true);
+        feedback.style.color = '#2a7d32';
+        feedback.textContent = '✔ Тачно је!';
+        disableButtons(section, true);
+        setTimeout(() => {
+          feedback.textContent = '';
+          disableButtons(section, false);
+          goToNext(section);
+        }, 1200);
+      } else {
+        playSound(false);
+        feedback.style.color = '#cc3333';
+        feedback.textContent = '❌ Није тачно. Пробај поново.';
+        firstAttemptTracker[section] = false; // pokvaren prvi pokušaj
+      }
+    }
+  
+    sequence.forEach(section => {
+      document.querySelectorAll(`#${section} [data-answer]`).forEach(btn => {
+        btn.addEventListener('click', () => {
+          handleAnswer(section, btn.getAttribute('data-answer'));
+        });
+      });
+    });
+  
+    function checkCryptoAnswer() {
+      const input = document.getElementById("cryptoInput").value.trim().toUpperCase();
+      const feedback = document.getElementById("cryptoFeedback");
+      if (!('crypto' in firstAttemptTracker)) {
+        firstAttemptTracker['crypto'] = true;
+      }
+  
+      if (input === "HELLO WORLD") {
+        if (firstAttemptTracker['crypto']) {
+          score++;
+        }
+        playSound(true);
+        feedback.style.color = '#2a7d32';
+        feedback.textContent = '✔ Тачно је!';
+        setTimeout(() => {
+          feedback.textContent = '';
+          goToNext("crypto");
+        }, 1200);
+      } else {
+        playSound(false);
+        feedback.style.color = '#cc3333';
+        feedback.textContent = '❌ Није тачно. Пробај поново.';
+        firstAttemptTracker['crypto'] = false;
+      }
+    }
+  
+    function checkRoboticsAnswer() {
+      const input = document.getElementById("roboticsInput").value.trim().toLowerCase();
+      const feedback = document.getElementById("roboticsFeedback");
+      if (!('robotics' in firstAttemptTracker)) {
+        firstAttemptTracker['robotics'] = true;
+      }
+  
+      if (input === "manipulator") {
+        if (firstAttemptTracker['robotics']) {
+          score++;
+        }
+        playSound(true);
+        feedback.style.color = '#2a7d32';
+        feedback.textContent = '✔ Тачно је!';
+        setTimeout(() => {
+          feedback.textContent = '';
+          goToNext("robotics");
+        }, 1200);
+      } else {
+        playSound(false);
+        feedback.style.color = '#cc3333';
+        feedback.textContent = '❌ Није тачно. Пробај поново.';
+        firstAttemptTracker['robotics'] = false;
+      }
+    }
+  
+    function startGame() {
+      goToNext("intro");
+    }
+  </script>  
+</body>
+</html>
